@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstoqueMaster - Novo Produto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+    <div class="card shadow p-4" style="width: 100%; max-width: 600px;">
+        <div class="mb-4">
+            <h4 class="fw-bold text-success">📦 Cadastrar Novo Produto</h4>
+            <p class="text-muted small">Insira os dados do item para dar entrada no estoque.</p>
+        </div>
+
+        <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+        <div th:if="${#lists.isEmpty(categorias)}" class="alert alert-warning">
+            Você precisa cadastrar pelo menos uma <strong>Categoria</strong> antes de adicionar um produto!
+            <br><a th:href="@{/categorias/novo}" class="alert-link">Clique aqui para criar uma categoria.</a>
+        </div>
+
+        <form th:if="${not #lists.isEmpty(categorias)}" th:action="@{/produtos/salvar}" method="post">
+            <div class="mb-3">
+                <label for="nome" class="form-label fw-semibold">Nome do Produto</label>
+                <input type="text" id="nome" name="nome" class="form-control" placeholder="Ex: Monitor Dell 24 polegadas" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="quantidade" class="form-label fw-semibold">Quantidade Inicial</label>
+                    <input type="number" id="quantidade" name="quantidade" class="form-control" min="0" value="0" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="preco" class="form-label fw-semibold">Preço Unitário (R$)</label>
+                    <input type="number" id="preco" name="preco" class="form-control" step="0.01" min="0.00" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoriaId" class="form-label fw-semibold">Categoria</label>
+                <select id="categoriaId" name="categoriaId" class="form-control" required>
+                    <option value="" disabled selected>Selecione uma categoria...</option>
+                    <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a th:href="@{/produtos}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success fw-semibold">Cadastrar Produto</button>
+            </div>
+        </form>
+        
+        <div th:if="${#lists.isEmpty(categorias)}" class="d-flex justify-content-end mt-2">
+            <a th:href="@{/produtos}" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    </div>
+
+</body>
+</html>
